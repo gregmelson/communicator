@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+
+  <title>Mosquito Repeller</title>
+
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="manifest" href="manifest.json"/>
+  <meta name="theme-color" content="#2196f3" />
+
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  <!-- App Icons for iOS -->
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+</head>
+<body>
+  <h1>Mosquito Repeller</h1>
+  <p>Click the button below to play a frequency that only Mosquitos and your kids will hear</p>
+  <button id="start">Start Sound</button>
+  <button id="stop">Stop Sound</button>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log('SW registered:', reg))
+          .catch(err => console.error('SW registration failed:', err));
+      });
+    }
+  </script>
+</body>
+</html>
