@@ -21,31 +21,31 @@ document.getElementById("stop").addEventListener("click", () => {
   }
 });
 
-let deferredPrompt;
-const installBtn = document.createElement('button');
-installBtn.textContent = "Install App";
-installBtn.style.display = "none";
-document.body.appendChild(installBtn);
-
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  installBtn.style.display = "inline-block";
-});
 
-installBtn.addEventListener('click', async () => {
-  installBtn.style.display = 'none';
-  if (deferredPrompt) {
+  const installBanner = document.createElement('div');
+  installBanner.style.background = "#f0f0f0";
+  installBanner.style.padding = "15px";
+  installBanner.style.textAlign = "center";
+  installBanner.innerHTML = `
+    <p style="margin:0;">Install Mosquito Repeller for a better experience.</p>
+    <button id="triggerInstall" style="margin-top:10px;padding:8px 15px;">Install App</button>
+  `;
+  document.body.appendChild(installBanner);
+
+  document.getElementById("triggerInstall").addEventListener("click", async () => {
+    installBanner.remove();
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     if (outcome === 'accepted') {
-        alert('Thanks! The app is now installing.');
-      
+      alert('Thanks! The app is now installing.');
     } else {
-   alert('No problem! You can install it anytime.');
+      alert('No problem! You can install it anytime.');
     }
     deferredPrompt = null;
-  }
+  });
 });
 
 document.addEventListener('DOMContentLoaded', () => {
