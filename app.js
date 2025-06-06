@@ -20,3 +20,29 @@ document.getElementById("stop").addEventListener("click", () => {
     audioContext = null;
   }
 });
+
+let deferredPrompt;
+const installBtn = document.createElement('button');
+installBtn.textContent = "Install App";
+installBtn.style.display = "none";
+document.body.appendChild(installBtn);
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = "inline-block";
+});
+
+installBtn.addEventListener('click', async () => {
+  installBtn.style.display = 'none';
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      console.log('User accepted the install prompt');
+    } else {
+      console.log('User dismissed the install prompt');
+    }
+    deferredPrompt = null;
+  }
+});
