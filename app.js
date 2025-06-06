@@ -39,10 +39,23 @@ installBtn.addEventListener('click', async () => {
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     if (outcome === 'accepted') {
-      console.log('User accepted the install prompt');
+        alert('Thanks! The app is now installing.');
+      
     } else {
-      console.log('User dismissed the install prompt');
+   alert('No problem! You can install it anytime.');
     }
     deferredPrompt = null;
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (!window.matchMedia('(display-mode: standalone)').matches) {
+    const msg = document.createElement('p');
+    msg.textContent = "Tip: Add this app to your home screen for a better experience!";
+    msg.style.color = "gray";
+    msg.style.fontSize = "0.9rem";
+    msg.style.textAlign = "center";
+    msg.style.marginTop = "20px";
+    document.body.appendChild(msg);
   }
 });
