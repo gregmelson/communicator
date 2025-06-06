@@ -1,6 +1,12 @@
 let audioContext;
 let oscillator;
+let deferredPrompt;
 
+
+
+  // Optional fallback tip for unsupported browsers
+document.addEventListener('DOMContentLoaded', () => {
+// Audio control logic
 document.getElementById("start").addEventListener("click", () => {
   if (!audioContext) {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -21,17 +27,27 @@ document.getElementById("stop").addEventListener("click", () => {
   }
 });
 
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
 
+
+// PWA install prompt
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();        // Avoid default browser prompt
+  deferredPrompt = e;        // Save the event
+
+  // Create custom banner
   const installBanner = document.createElement('div');
-  installBanner.style.background = "#f0f0f0";
-  installBanner.style.padding = "15px";
-  installBanner.style.textAlign = "center";
+  installBanner.style = `
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #f0f0f0;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+  `;
   installBanner.innerHTML = `
-    <p style="margin:0;">Install Mosquito Repeller for a better experience.</p>
-    <button id="triggerInstall" style="margin-top:10px;padding:8px 15px;">Install App</button>
+    <span>Install <strong>Mosquito Repeller</strong> for a better experience.</span>
+    <button id="triggerInstall" style="margin-left:10px;padding:8px 15px;">Install App</button>
   `;
   document.body.appendChild(installBanner);
 
@@ -39,23 +55,17 @@ window.addEventListener('beforeinstallprompt', (e) => {
     installBanner.remove();
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      alert('Thanks! The app is now installing.');
-    } else {
-      alert('No problem! You can install it anytime.');
-    }
+    alert(outcome === 'accepted' ? 'App installed!' : 'Maybe later.');
     deferredPrompt = null;
   });
 });
 
-document.addEventListener('DOMContentLoaded', () => {
+
   if (!window.matchMedia('(display-mode: standalone)').matches) {
-    const msg = document.createElement('p');
-    msg.textContent = "Tip: Add this app to your home screen for a better experience!";
-    msg.style.color = "gray";
-    msg.style.fontSize = "0.9rem";
-    msg.style.textAlign = "center";
-    msg.style.marginTop = "20px";
-    document.body.appendChild(msg);
+    const tip = document.createElement('p');
+    tip.textContent = "Tip: Use your browser menu to 'Add to Home screen'.";
+    tip.style = 'color:gray; font-size:0.9rem; text-align:center; margin-top:20px;';
+    document.body.appendChild(tip);
   }
 });
+ 
